@@ -7,6 +7,7 @@ import MiddleWare from "./components/MiddleWare";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import NotFound from "./components/NotFound";
+import QuizHistory from "./components/QuizHistory";
 
 function App() {
 
@@ -30,6 +31,10 @@ function App() {
 
         <Route path="/quiz" element={<MiddleWare type="any" />} >
           <Route path="/quiz/:quizId" element={<Quiz />} />
+        </Route>
+
+        <Route path="/history" element={<MiddleWare type="any" />} >
+          <Route path="/history" element={<QuizHistory />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

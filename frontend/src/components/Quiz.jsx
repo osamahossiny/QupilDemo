@@ -4,6 +4,7 @@ import Loading from './Loading';
 import useSpeachRecognition from '../hooks/useSpeachRecognition';
 import { FaMicrophone, FaStop } from 'react-icons/fa';
 import { HiSpeakerphone } from "react-icons/hi";
+import NoData from './NoData';
 
 const Quiz = () => {
     const [quiz, setQuiz] = useState(null)
@@ -219,7 +220,8 @@ const Quiz = () => {
         loading?
         <Loading/>
         :
-        <div className="text-center text-gray-500">The quiz is not available at the moment.</div>
+        // <div className="text-center text-gray-500">The quiz is not available at the moment.</div>
+        <NoData/>
     );
 };
 

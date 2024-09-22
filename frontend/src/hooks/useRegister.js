@@ -21,12 +21,19 @@ export const useRegister = () => {
             }
             
           ).then( async (res)=> {
-            let data = res.json()
-            await dispatch({type:'LOGIN',payload:data})
-            return {message:'success'}
-        }).catch((error)=>{
-            let data = error.json()
-            return {error:data.error};
+            if (res.ok) {
+              let data = await res.json()
+              await dispatch({type:'LOGIN',payload:data})
+              return {message:'success'}
+            } else {
+              let data = await res.json()
+              console.log(data);
+              
+              return {error:"data.error"};
+            }
+        }).catch((error) => {
+            console.log(error);
+            return {error:"Server error"};
           });
         return success
     }

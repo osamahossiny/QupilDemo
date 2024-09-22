@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useRegister } from '../hooks/useRegister';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Register = ({ onRegister }) => {
     const [username, setUsername] = useState('');
@@ -8,13 +10,14 @@ const Register = ({ onRegister }) => {
 
     const {register, isLoading} = useRegister()
     const [error, setError] = useState('')
+    const navigate = useNavigate()
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const request = async () => {
             const logedIn = await register(email,password,username)
             console.log(logedIn);
-            if (logedIn && ! logedIn.error) {
+            if (logedIn && !logedIn.error) {
                 navigate('/home')
             }
             if (logedIn.error) {
@@ -22,7 +25,6 @@ const Register = ({ onRegister }) => {
             }
           }
           request()
-        onRegister({ username, password, email });
     };
 
     return (
@@ -64,11 +66,14 @@ const Register = ({ onRegister }) => {
                     </div>
                     <button
                         type="submit"
-                        className="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors"
+                        className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
                     >
                         Register
                     </button>
                 </form>
+                <Link to="/login" className=" text-blue-700 mt-2 block text-right hover:text-gray-500 hover:underline">
+                    already have an account
+                </Link>
                 {error && 
                     <label className="block text-sm mt-2 text-center font-medium text-red-700">{error}</label>
                 }

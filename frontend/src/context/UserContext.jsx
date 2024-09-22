@@ -8,7 +8,7 @@ export const userReducer = (state, action) => {
         case 'RESTORE':
             return { user: action.payload }
         case 'LOGOUT':
-            return { user: {name:'',type:''} }
+            return { user: {username:'',type:''} }
         default:
             return state
     }
@@ -27,11 +27,11 @@ export const UserContextProvider = ({ children }) => {
                 }
                 else {
                     setLoading(false)
-                    dispatch({type:'RESTORE',payload:{name:'',type:''}})
+                    dispatch({type:'RESTORE',payload:{username:'',type:''}})
                 }
             }).catch((error)=>{
                 setLoading(false)
-                dispatch({type:'RESTORE',payload:{name:'',type:''}})
+                dispatch({type:'RESTORE',payload:{username:'',type:''}})
             })
     }
     return (

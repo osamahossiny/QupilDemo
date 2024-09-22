@@ -19,13 +19,20 @@ const userSchema = new Schema({
         type : String,
         default : ""
     },
-    quizes : {
+    quizzes : {
         type: [{
             quizId: { type: mongoose.ObjectId, ref: 'quiz' },
+            title: {type: String, required: true},
             startTime: { type: Date, default: 0 },
             stopTime: { type: Date, default: 0 },
             answered: { type: [mongoose.ObjectId], default: [] },
             grade: { type: Number, default: 0 },
+            maxGrade: {type: Number, default: 100},
+            level: {
+                type: String,
+                enum: ['beginner','intermediate','advanced'],
+                required: true
+            },
             passed: {type: Boolean, default: false},
             status: {
                 type: String,

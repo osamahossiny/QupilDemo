@@ -4,10 +4,10 @@ const quizModel = require("../models/QuizModel");
 const userModel = require("../models/UserModel")
 
 const getAllQuizzes = async (req, res) => {
-    const quizes = await quizModel.find({},'title duration expertiseLevel _id').lean()
-    console.log(quizes);
+    const quizzes = await quizModel.find({},'title duration expertiseLevel _id').lean()
+    console.log(quizzes);
     
-    res.status(200).json(quizes)
+    res.status(200).json(quizzes)
 }
 
 const getQuiz = async (req, res) => {
@@ -30,8 +30,12 @@ const getQuiz = async (req, res) => {
 
 const addQuiz = async (req, res) => {
     try {
-        const {title, questions, passingGrade, duration, expertiseLevel} = req.body    
-        const quiz = await quizModel.create({title, questions, passingGrade, duration, expertiseLevel});
+        const {title, questions, passingGrade, duration, expertiseLevel} = req.body
+        const maxGrade = questions.reduce(
+            (ac, que) => ac + que.grade,
+            0,
+          );
+        const quiz = await quizModel.create({title, questions, passingGrade, duration, expertiseLevel, maxGrade});
         res.status(200).json(quiz);
     } catch (error) {
         res.status(500).json(error);
@@ -42,9 +46,8 @@ const startQuiz = async (req, res) => {
     try {
         const id = req._id
         const { quizId } = req.body
-        console.log(quizId);
         
-        const quiz = await quizModel.findById(quizId,'duration _id')
+        const quiz = await quizModel.findById(quizId,'duration title expertiseLevel maxGrade _id')
         if (!quiz || !quiz._id) {
             throw new Error("Invalid quiz id")
         }
@@ -52,12 +55,15 @@ const startQuiz = async (req, res) => {
         // TODO add logic to stop user from starting quiz while one is already started or schedualed
         const startTime = new Date()
         const stopTime = new Date(startTime.getTime() + quiz.duration * 60000);
-        user.quizes.push({
+        user.quizzes.push({
             quizId: quizId,
             startTime,
             stopTime,
             grade: 0,
-            status: 'inprogress'
+            status: 'inprogress',
+            level: quiz.expertiseLevel,
+            maxGrade: quiz.maxGrade,
+            title: quiz.title
         })
         user.save().then(() => {
             res.status(200).json({message: "quiz started"});
@@ -95,19 +101,19 @@ const asnwerQuestion = async (req, res) => {
 
         const grade = quiz.questions[0].grade
         let found = false;        
-        for (let i = 0; i < user.quizes.length; i++) {
+        for (let i = 0; i < user.quizzes.length; i++) {
             
-            if (user.quizes[i].quizId.toString() == quizId) {
-                if (user.quizes[i].answered.includes(questionId)) {
+            if (user.quizzes[i].quizId.toString() == quizId) {
+                if (user.quizzes[i].answered.includes(questionId)) {
                     console.log("answered before");
                     
                     return res.status(200).json({message:"correct answer"})
                 }
                 else {
-                    user.quizes[i].answered.push(new mongoose.Types.ObjectId(questionId));
-                    user.quizes[i].grade += grade;
-                    if (user.quizes[i].grade >= quiz.passingGrade) {
-                        user.quizes[i].passed = true;
+                    user.quizzes[i].answered.push(new mongoose.Types.ObjectId(questionId));
+                    user.quizzes[i].grade += grade;
+                    if (user.quizzes[i].grade >= quiz.passingGrade) {
+                        user.quizzes[i].passed = true;
                     }
                     found = true;
                     break;

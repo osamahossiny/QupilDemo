@@ -47,6 +47,10 @@ const quizSchema = new Schema({
         type: String,
         enum: ['beginner','intermediate','advanced'],
         required: true
+    },
+    maxGrade : {
+        type : Number,
+        required: true
     }
 })
 

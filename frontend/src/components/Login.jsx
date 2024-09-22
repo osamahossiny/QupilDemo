@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useLogin } from '../hooks/useLogin'
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const { login, isLoading, error, setError } = useLogin()
@@ -13,7 +14,7 @@ const Login = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const request = async () => {
-            const logedIn = await login(username, password)
+            const logedIn = await login(email, password)
             console.log(logedIn);
             if (logedIn) {
                 navigate('/home')
@@ -26,7 +27,7 @@ const Login = () => {
         if (error != ""){
             setError("")
         }
-    },[username,password])
+    },[email,password])
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -34,12 +35,12 @@ const Login = () => {
                 <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Login</h2>
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
                         <input
-                            type="text"
-                            id="username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            type="email"
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             className="w-full mt-1 p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                             required
                         />
@@ -62,6 +63,9 @@ const Login = () => {
                         Login
                     </button>
                 </form>
+                <Link to="/register" className=" text-blue-700 mt-2 block text-right hover:text-gray-500 hover:underline">
+                    create an account
+                </Link>
                 {error && 
                     <label className="block text-sm mt-2 text-center font-medium text-red-700">{error}</label>
                 }

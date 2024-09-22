@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useUserContext } from "../hooks/useUserContext";
 import Loading from "./Loading";
 import { Outlet, Navigate } from "react-router-dom";
+import Navbar from "./NavBar";
 
 const MiddleWare = ({type}) => {
     const { user } = useUserContext()
@@ -16,7 +17,15 @@ const MiddleWare = ({type}) => {
     if (user && user.type && (type == "Login" || type == "Guest") ) {
         return (<Navigate to="/home" />)
     }
-    else if(!user.type && type === "Login"){
+    else if (user && user.type) {
+        return(
+            <div>
+                <Navbar/>
+                <Outlet/>
+            </div>
+        )
+    }
+    else if(!user.type && type != "Login"){
         return (<Navigate to="/login" />)
     }
     else return(<Outlet/>)

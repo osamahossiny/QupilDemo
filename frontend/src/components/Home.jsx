@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Loading from './Loading';
 import { useNavigate } from 'react-router-dom';
+import NoData from './NoData';
 
 const Home = () => {
     // if (!quizzes || quizzes.length === 0) {
@@ -131,7 +132,8 @@ const Home = () => {
         loading?
         <Loading/>
         :
-        <div className="text-center text-gray-500">No quizzes available at the moment.</div>
+        // <div className="text-center text-gray-500">No quizzes available at the moment.</div>
+        <NoData/>
     );
 };
 
